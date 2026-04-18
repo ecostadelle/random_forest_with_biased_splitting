@@ -1,0 +1,20 @@
+blosc2==2.0.0
+Cython==0.29.37
+CythonGSL==0.2.2
+Jinja2==3.1.6
+joblib==1.0.1
+matplotlib-inline==0.1.7
+matplotlib==3.6.3
+numexpr==2.10.0
+numpy==1.19.5
+pandas==1.3.0
+pyarrow==20.0.0
+scikit-learn==0.24.2
+scipy==1.10.1
+seaborn==0.12.2
+setuptools~=51.3.3
+tables==3.8.0
+tabulate==0.9.0
+-e ./ipm
+-e ./maia
+-e ./tableshift
