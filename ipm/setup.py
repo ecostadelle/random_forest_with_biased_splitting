@@ -32,7 +32,7 @@ setup(
     version='0.1',
     author='Ewerton Costadelle',
     author_email='ecostadelle@id.uff.br',
-    description='Intervention in Prediction Measure (IPM) as proposed by Epifânio (2017)',
+    description='Intervention in Prediction Measure (IPM) as proposed by Epifanio (2017)',
     long_description=long_description,
     long_description_content_type='text/markdown', 
     ext_modules=cythonize(
