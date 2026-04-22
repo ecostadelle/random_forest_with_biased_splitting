@@ -34,19 +34,18 @@ pip install -r requirements.txt
 
 The experiments were executed on the following hardware:
 
-* AMD Ryzen 9
+* AMD Ryzen 9 3900X 12-Core Processor 
 * 64 GB RAM
-* NVIDIA GeForce RTX 2080 Ti
 
 The code was not tested on Windows, although it may also work there with small adjustments.
 
 ## Datasets
 
-The datasets should be downloaded following the instructions from Gardner et al. (2023), available at:
+The datasets should be downloaded following the instructions from Gardner et al. (2023), also available at:
 
 * [https://tableshift.org/datasets.html](https://tableshift.org/datasets.html)
 
-After downloading the datasets, update the dataset path in `run.py`.
+After downloading the datasets, update the cached dataset path in `run.py`.
 
 By default, the repository uses:
 
@@ -96,20 +95,20 @@ This project is distributed under the GNU General Public License v3.0 (GPLv3).
 
 ## Citation
 
-If you use this repository, please cite:
+This work is associated with the following forthcoming publication:
 
 ```bibtex
 @inproceedings{costadelle2026,
   title={A New Approach to Handle Data Shift Based on Feature Importance Measurement},
   author={Costadelle, Ewerton Luiz and Maia, Marcelo Rodrigues de Holanda and Plastino, Alexandre and Freitas, Alex Alves},
-  booktitle={Proceedings of the 21st Iberian Conference on Information Systems and Technologies (CISTI 2026)},
+  booktitle={To appear in Proceedings of the 21st Iberian Conference on Information Systems and Technologies (CISTI 2026)},
   year={2026}
 }
 ```
 
 ## Acknowledgments
 
-This project builds upon:
+This project builds upon following repositories:
 
 * TableShift benchmark by Gardner et al. (2023): [https://github.com/mlfoundations/tableshift](https://github.com/mlfoundations/tableshift)
 * The interpretable ensembles implementation by Maia et al. (2023): [https://github.com/marcelorhmaia/interpretable-ensembles-for-ucd](https://github.com/marcelorhmaia/interpretable-ensembles-for-ucd)
