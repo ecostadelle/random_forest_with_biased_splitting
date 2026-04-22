@@ -42,7 +42,7 @@ HEAVYWEIGHT_DATASETS = [
     [ 'Unemployment',            'acsunemployment'         ],
 ]
 
-AVALIABLE_DATASETS = sorted(
+AVAILABLE_DATASETS = sorted(
     LIGHTWEIGHT_DATASETS + MIDWEIGHT_DATASETS + HEAVYWEIGHT_DATASETS, 
     key=lambda x: x[0]
 )

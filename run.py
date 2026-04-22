@@ -1,6 +1,8 @@
+import argparse
+
 from handlers import (
     LIGHTWEIGHT_DATASETS,
-    AVALIABLE_DATASETS,
+    AVAILABLE_DATASETS,
     DatasetHandler,
     ModelTrainer,
     Evaluation,
@@ -10,16 +12,14 @@ from ipm import get_ipm
 from maia import UDRandomForestClassifier as UD
 from sklearn.ensemble import RandomForestClassifier as RF
 
-dataset_path = "../tableshift/tmp"
-filename = "ipm_in_rfbs"
-
-def main():
+def main(dataset_path, output_prefix, light):
 
     dataset_handler = DatasetHandler(dataset_path)
-    evaluator = Evaluation(filename, datasets=AVALIABLE_DATASETS)
+    datasets = LIGHTWEIGHT_DATASETS if light else AVAILABLE_DATASETS
+    evaluator = Evaluation(output_prefix, datasets=datasets)
 
 
-    for dataset_name, experiment in AVALIABLE_DATASETS:
+    for dataset_name, experiment in datasets:
         info(f"Processing dataset: {dataset_name}")
 
         X_train, y_train = dataset_handler.load_data(experiment, "train")
@@ -50,14 +50,14 @@ def main():
         bias = get_ipm(base_model, X_ood).clip(1e-9)
         strategies = [bias]
 
-        del(base_model)
+        del base_model
 
 
         # Train adapted model
         for i, strategy in enumerate(strategies, start=1):
             adapted_model = trainer.train_adapted_model(X_train, y_train, feature_bias=strategy)
             y_hat_ood_adapted = adapted_model.predict(X_ood)
-            del(adapted_model)
+            del adapted_model
 
             metrics_adapted = evaluator.compute_metrics(y_ood, y_hat_ood_adapted)
             for metric, value in metrics_adapted.items():
@@ -68,16 +68,40 @@ def main():
         info(f"Finished dataset: {dataset_name}")
 
     # Generate LaTeX reports
-    evaluate = {
-        "Accuracy": ["accuracy_id", "accuracy_ood", "accuracy_s1"], 
-        "F1-measure": ["f1_id", "f1_ood", "f1_s1"],
-    }
-    
     strategy_names = ["IPM"]
     latex_report = evaluator.generate_latex_report(strategy_names)
 
-    with open(f"{filename}.tex", "w") as f:
+    with open(f"{output_prefix}.tex", "w") as f:
         f.write(latex_report)
 
 if __name__ == "__main__":
-    main()
+
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument(
+        "--dataset-path",
+        type=str,
+        default="../tableshift/tmp",
+        help="Path to the downloaded datasets"
+    )
+
+    parser.add_argument(
+        "--output-prefix",
+        type=str,
+        default="ipm_in_rfbs",
+        help="Prefix used for output files"
+    )
+
+    parser.add_argument(
+        "--light",
+        action="store_true",
+        help="Use only smaller datasets"
+    )
+
+    args = parser.parse_args()
+
+    dataset_path = args.dataset_path
+    output_prefix = args.output_prefix
+    light = args.light
+
+    main(dataset_path, output_prefix, light)
