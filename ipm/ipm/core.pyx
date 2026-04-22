@@ -5,12 +5,9 @@ cnp.import_array()
 from libcpp.unordered_set cimport unordered_set
 from libcpp.set cimport set
 from libcpp.vector cimport vector
-from libc.stdlib cimport malloc, free
-from libc cimport math
 
 from sklearn.tree._tree cimport Tree
 from sklearn.tree._tree cimport Node
-from sklearn.tree._utils cimport rand_int, rand_uniform
 
 from sklearn.ensemble._forest import _generate_sample_indices
 
@@ -140,39 +137,32 @@ cpdef object get_features_set_in_path(
 
 cpdef cnp.ndarray _ipm(object decision_tree, float64_t[:,:] X): 
     """
-    Compute the Intervention in Prediction Measure (IPM) as proposed by Epifânio (2017).
-
-    This implementation follows the original definition, where all occurrences 
-    of features along a decision path are counted (i.e., multiple appearances 
-    of the same feature are allowed and accumulated). The contribution of each 
-    feature is weighted by the inverse of the path length and normalized by the 
-    number of samples.
+    Computes the Importance in Prediction Measure (IPM) for each 
+    feature in the dataset based on the given decision tree.
 
     Parameters
     ----------
     decision_tree : object
-        A trained decision tree object (e.g., from scikit-learn). The function 
-        accesses the underlying structure via the `tree_` attribute.
+        A trained decision tree object, typically from scikit-learn. The function accesses 
+        the underlying tree structure via the `tree_` attribute.
 
-    X : ndarray of shape (n_samples, n_features)
-        Input feature matrix used to traverse the tree and compute 
-        feature-level contributions.
+    X : ndarray of shape (n_samples, n_features), dtype=float64
+        The input feature matrix for which the IPM is to be computed.
 
     Returns
     -------
     ipm : ndarray of shape (n_features,)
-        An array representing the importance measure for each feature. For each 
-        sample, every occurrence of a feature in the decision path adds a 
-        proportional value (1 / path_length / n_samples) to its corresponding 
-        position in the result.
+        An array representing the importance measure of each feature. The importance is 
+        computed based on the number of times a feature is encountered across all paths 
+        in the decision tree, normalized by the number of samples and the number of features 
+        involved in each path.
 
     Notes
     -----
-    - This function traverses the decision tree for each sample in `X` and records every feature used in the decision path, including duplicates.
-    - No filtering is performed to ensure uniqueness; features that appear multiple times 
-      in the path contribute multiple times to the final score.
-    - The result is normalized by the number of samples and the length of each path, 
-      preserving the original formulation of Epifânio (2017).
+    - The function works by traversing the decision tree for each sample in `X` and 
+      accumulating the feature contributions across the decision paths.
+    - The contribution of each feature is computed as the inverse of the number of unique 
+      features in the path, divided by the total number of samples.
 
     Examples
     --------
@@ -180,22 +170,32 @@ cpdef cnp.ndarray _ipm(object decision_tree, float64_t[:,:] X):
     >>> from sklearn.tree import DecisionTreeClassifier
     >>> from ipm import _ipm
     >>> X = np.array([
-    ...     [1.0, 2.0],
-    ...     [3.0, 4.0],
-    ...     [5.0, 6.0],
+    ...     [1.0, 2.0], 
+    ...     [3.0, 4.0], 
+    ...     [5.0, 6.0], 
     ...     [7.0, 8.0]
     ... ])
     >>> y = np.array([0, 1, 0, 1])
     >>> clf = DecisionTreeClassifier(max_depth=3).fit(X, y)
-    >>> ipm = _ipm(clf, X[[1]])
-    >>> print(ipm)
-    [0.5, 0.5]  # If both features appear once on the path of X[1]
+
+    The resulting tree structure:
+    
+    For the input sample X[1] = [3.0, 4.0], the decision path traverses:
+      - x[0] (one time),
+      - x[1] (one time, even though it appears twice in the tree).
+
+    The expected output, considering unique feature contributions:
+
+    >>> ipm_result = _ipm(clf, X[[1]])
+    >>> print(ipm_result)
+    [0.5, 0.5] 
+
     """
 
     cdef:
         Tree tree = <Tree> decision_tree.tree_
         Node* nodes = <Node*> tree.nodes
-        vector[intp_t] features_vector
+        unordered_set[intp_t] J
         intp_t i, j, k
         intp_t n = <intp_t> X.shape[0]
         intp_t m = <intp_t> X.shape[1]
@@ -203,11 +203,18 @@ cpdef cnp.ndarray _ipm(object decision_tree, float64_t[:,:] X):
 
     with nogil:
         for i in range(n):
-            features_vector = _features_vector_in_path(nodes, X, i, 
-                                                       tree.max_depth)
+            J.clear()
+            k = 0
+            while nodes[k].feature > -1:
+                j = nodes[k].feature
+                J.insert(j)
+                if X[i,j] <= nodes[k].threshold:
+                    k = nodes[k].left_child
+                else:
+                    k = nodes[k].right_child
             
-            for feature in features_vector:
-                ipm[feature] += 1/features_vector.size()/n
+            for j in J:
+                ipm[j] = ipm[j] + 1/J.size()/n
 
     return np.asarray(ipm)
 

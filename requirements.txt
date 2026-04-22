@@ -1,3 +1,6 @@
+-e ./ipm
+-e ./maia
+-e ./tableshift
 blosc2==2.0.0
 Cython==0.29.37
 CythonGSL==0.2.2
@@ -15,6 +18,6 @@ seaborn==0.12.2
 setuptools~=51.3.3
 tables==3.8.0
 tabulate==0.9.0
--e ./ipm
--e ./maia
--e ./tableshift
+ray==2.2.0
+datasets==3.6.0
+xport==3.2.1

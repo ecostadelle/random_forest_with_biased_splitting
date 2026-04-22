@@ -1,6 +1,6 @@
 from handlers import (
-    AVALIABLE_DATASETS,
     LIGHTWEIGHT_DATASETS,
+    AVALIABLE_DATASETS,
     DatasetHandler,
     ModelTrainer,
     Evaluation,
@@ -16,10 +16,10 @@ filename = "ipm_in_rfbs"
 def main():
 
     dataset_handler = DatasetHandler(dataset_path)
-    evaluator = Evaluation(filename)
+    evaluator = Evaluation(filename, datasets=AVALIABLE_DATASETS)
 
 
-    for dataset_name, experiment in LIGHTWEIGHT_DATASETS:
+    for dataset_name, experiment in AVALIABLE_DATASETS:
         info(f"Processing dataset: {dataset_name}")
 
         X_train, y_train = dataset_handler.load_data(experiment, "train")
