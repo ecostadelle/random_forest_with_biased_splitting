@@ -1,0 +1,47 @@
+# Ambiente virtual
+.venv
+.env
+env
+venv
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.so
+*.c
+*.cpp
+
+# Git
+.git
+.gitignore
+
+# Jupyter
+.ipynb_checkpoints
+
+# Outputs
+*.csv
+*.md
+*.tex
+*.log
+*.out
+
+# Dados grandes (ajuste conforme sua estrutura)
+tableshift/tmp
+datasets
+data
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode
+.idea
+
+# Build artifacts
+build/
+dist/
+*.egg-info
+cython_debug

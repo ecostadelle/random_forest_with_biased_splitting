@@ -1,2 +1,2 @@
 [build-system]
-requires = ["setuptools==58.1.0","numpy==1.19.5","Cython==3.0.10","scikit-learn==0.24.2"]
+requires = ["setuptools==58.1.0","numpy==1.19.5","Cython==3.0.10","scikit-learn==0.24.2", "build==1.4.4"]
