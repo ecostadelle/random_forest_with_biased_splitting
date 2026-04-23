@@ -97,7 +97,7 @@ def _parallel_ipm(forest: RandomForestClassifier, X: np.ndarray, n_jobs: int):
     Returns:
         np.ndarray: IPM values for each feature.
     """
-    result = Parallel(n_jobs=n_jobs, prefer='threads')(
+    result = Parallel(n_jobs=n_jobs, backend='multiprocessing')(
         delayed(_ipm)
         (
             decision_tree,

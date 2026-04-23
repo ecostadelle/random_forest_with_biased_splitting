@@ -599,11 +599,12 @@ class UDDecisionTreeClassifier(DecisionTreeClassifier):
 
         splitter = self.splitter
         if not isinstance(self.splitter, Splitter):
-            splitter = SPLITTERS[self.splitter](criterion,
-                                                self.max_features_,
-                                                min_samples_leaf,
-                                                min_weight_leaf,
-                                                random_state)
+            # splitter = SPLITTERS[self.splitter](criterion,
+            splitter = ud_splitter.UDBestSplitter(criterion,
+                                                  self.max_features_,
+                                                  min_samples_leaf,
+                                                  min_weight_leaf,
+                                                  random_state)
 
         if is_classifier(self):
             self.tree_ = Tree(self.n_features_,

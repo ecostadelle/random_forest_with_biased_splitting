@@ -469,8 +469,7 @@ class UDRandomForestClassifier(RandomForestClassifier):
             # that case. However, for joblib 0.12+ we respect any
             # parallel_backend contexts set at a higher level,
             # since correctness does not rely on using threads.
-            trees = Parallel(n_jobs=self.n_jobs, verbose=self.verbose,
-                             **_joblib_parallel_args(prefer='threads'))(
+            trees = Parallel(n_jobs=self.n_jobs, verbose=self.verbose, backend='multiprocessing')(
                 delayed(parallel_build_trees)(
                     t, self, X, y, sample_weight, i, len(trees),
                     verbose=self.verbose, class_weight=self.class_weight,
