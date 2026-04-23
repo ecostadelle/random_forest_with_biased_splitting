@@ -49,15 +49,7 @@ setup(
     ],
     zip_safe=False,
     packages=find_packages(),
-    install_requires=[
-        'numpy==1.19.5',
-        'scikit-learn==0.24.2',
-        'pandas==1.3.0',
-        'scipy==1.10.1',
-        'pyarrow==20.0.0',
-        'tabulate==0.9.0',
-        'Jinja2==3.1.6'
-    ],
+    install_requires=[],
     include_package_data=True,
     package_data={'ipm': ['*.pxd', '*.pyx', '*.py'] },
 )

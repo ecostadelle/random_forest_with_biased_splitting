@@ -24,8 +24,8 @@ setup(
     description='Original Biased Splitting Random Forest implementation, by Maia (2023)',
     packages=find_packages(),
     install_requires=[
-        'numpy<=1.19.5',
-        'scikit-learn<=0.24.2'
+        'numpy==1.19.5',
+        'scikit-learn==0.24.2'
     ],
     include_package_data=True,
     package_data={'maia': ['*.pxd', '*.pyx', '*.py'] },
