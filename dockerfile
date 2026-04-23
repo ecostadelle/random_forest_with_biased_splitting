@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y \
 
 COPY . /app
 
-RUN pip install -r requirements.txt \
+RUN pip install --no-cache-dir -r requirements.txt \
     && pip cache purge
 
 CMD ["python", "run.py", "--dataset-path", "/datasets"]
